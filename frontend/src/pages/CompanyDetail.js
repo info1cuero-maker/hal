@@ -1,0 +1,146 @@
+import React from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { mockCompanies } from '../data/mockData';
+import { MapPin, Star, Phone, Mail, Globe, ArrowLeft, MessageCircle } from 'lucide-react';
+
+const CompanyDetail = () => {
+  const { id } = useParams();
+  const { language, t } = useLanguage();
+  const company = mockCompanies.find(c => c.id === parseInt(id));
+
+  if (!company) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            {language === 'uk' ? 'Компанію не знайдено' : 'Компания не найдена'}
+          </h1>
+          <Link to="/" className="text-pink-600 hover:text-pink-700 font-semibold">
+            {language === 'uk' ? 'Повернутись на головну' : 'Вернуться на главную'}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const name = language === 'uk' ? company.name : company.nameRu;
+  const description = language === 'uk' ? company.description : company.descriptionRu;
+
+  return (
+    <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+      <div className="container mx-auto px-4">
+        {/* Back Button */}
+        <Link
+          to="/search"
+          className="inline-flex items-center text-pink-600 hover:text-pink-700 font-semibold mb-6 group"
+        >
+          <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+          {language === 'uk' ? 'Назад до пошуку' : 'Назад к поиску'}
+        </Link>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            {/* Header Image */}
+            <div className="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+              <img
+                src={company.image}
+                alt={name}
+                className="w-full h-96 object-cover"
+              />
+              <div className="p-6">
+                {company.isNew && (
+                  <span className="inline-block bg-gradient-to-r from-pink-500 to-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                    {t('sections.new')}
+                  </span>
+                )}
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">{name}</h1>
+                
+                {/* Rating */}
+                {company.rating && (
+                  <div className="flex items-center mb-4">
+                    <Star size={24} className="text-yellow-400 fill-yellow-400 mr-2" />
+                    <span className="text-2xl font-bold text-gray-900 mr-2">{company.rating}</span>
+                    <span className="text-gray-600">({company.reviews} {language === 'uk' ? 'відгуків' : 'отзывов'})</span>
+                  </div>
+                )}
+
+                {/* Location */}
+                <div className="flex items-center text-gray-600 mb-6">
+                  <MapPin size={20} className="mr-2" />
+                  <span className="text-lg">{company.location}</span>
+                </div>
+
+                <p className="text-gray-700 text-lg leading-relaxed">{description}</p>
+              </div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                {language === 'uk' ? 'Відгуки' : 'Отзывы'}
+              </h2>
+              <p className="text-gray-600">
+                {language === 'uk' ? 'Відгуки поки відсутні' : 'Отзывы пока отсутствуют'}
+              </p>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            {/* Contact Card */}
+            <div className="bg-white rounded-xl shadow-md p-6 mb-6 sticky top-24">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                {language === 'uk' ? 'Контактна інформація' : 'Контактная информация'}
+              </h3>
+
+              {/* Phone */}
+              {company.phone && (
+                <div className="flex items-center mb-4 text-gray-700">
+                  <Phone size={18} className="mr-3 text-pink-600" />
+                  <a href={`tel:${company.phone}`} className="hover:text-pink-600 transition-colors">
+                    {company.phone}
+                  </a>
+                </div>
+              )}
+
+              {/* Email */}
+              {company.email && (
+                <div className="flex items-center mb-4 text-gray-700">
+                  <Mail size={18} className="mr-3 text-pink-600" />
+                  <a href={`mailto:${company.email}`} className="hover:text-pink-600 transition-colors break-all">
+                    {company.email}
+                  </a>
+                </div>
+              )}
+
+              {/* Website */}
+              {company.website && (
+                <div className="flex items-center mb-6 text-gray-700">
+                  <Globe size={18} className="mr-3 text-pink-600" />
+                  <a
+                    href={company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-pink-600 transition-colors break-all"
+                  >
+                    {language === 'uk' ? 'Веб-сайт' : 'Веб-сайт'}
+                  </a>
+                </div>
+              )}
+
+              {/* Contact Button */}
+              <button className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-red-600 transition-all font-semibold flex items-center justify-center space-x-2">
+                <MessageCircle size={20} />
+                <span>{t('common.sendMessage')}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CompanyDetail;
