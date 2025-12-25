@@ -167,10 +167,16 @@ const Contacts = () => {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-red-600 transition-all font-semibold flex items-center justify-center space-x-2"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-red-600 transition-all font-semibold flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send size={20} />
-                <span>{language === 'uk' ? 'Надіслати' : 'Отправить'}</span>
+                <span>
+                  {loading 
+                    ? (language === 'uk' ? 'Надсилання...' : 'Отправка...') 
+                    : (language === 'uk' ? 'Надіслати' : 'Отправить')
+                  }
+                </span>
               </button>
             </form>
           </div>
