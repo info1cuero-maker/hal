@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { mockCompanies, categories } from '../data/mockData';
+import { companiesAPI, categoriesAPI } from '../services/api';
 import CompanyCard from '../components/CompanyCard';
 import { ArrowRight, Utensils, Dumbbell, Sparkles, Palette, Home as HomeIcon, Car, Hammer, MoreHorizontal } from 'lucide-react';
 
