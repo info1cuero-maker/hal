@@ -163,7 +163,7 @@ const AddBusiness = () => {
             {/* Description */}
             <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                {language === 'uk' ? 'Опис' : 'Описание'} *
+                {language === 'uk' ? 'Опис (українською)' : 'Описание (на украинском)'} *
               </label>
               <textarea
                 id="description"
@@ -171,6 +171,21 @@ const AddBusiness = () => {
                 value={formData.description}
                 onChange={handleChange}
                 required
+                rows={4}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+              />
+            </div>
+
+            {/* Description Russian */}
+            <div>
+              <label htmlFor="descriptionRu" className="block text-sm font-medium text-gray-700 mb-2">
+                {language === 'uk' ? 'Опис (російською)' : 'Описание (на русском)'}
+              </label>
+              <textarea
+                id="descriptionRu"
+                name="descriptionRu"
+                value={formData.descriptionRu}
+                onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
               />
