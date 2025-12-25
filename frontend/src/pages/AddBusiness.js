@@ -1,30 +1,84 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import { companiesAPI } from '../services/api';
 import { categories } from '../data/mockData';
 import { Building2, Upload } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
 const AddBusiness = () => {
   const { language } = useLanguage();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
+    nameRu: '',
     category: '',
     description: '',
+    descriptionRu: '',
     phone: '',
     email: '',
     website: '',
-    address: ''
+    city: 'Kyiv',
+    address: '',
+    image: 'https://via.placeholder.com/400x300/E0E0E0/666666?text=Company'
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast({
-      title: language === 'uk' ? 'Компанію додано' : 'Компания добавлена',
-      description: language === 'uk' ? 'Ваша компанія буде перевірена та опублікована найближчим часом' : 'Ваша компания будет проверена и опубликована в ближайшее время'
-    });
-    setTimeout(() => navigate('/'), 2000);
+    
+    if (!isAuthenticated) {
+      toast({
+        title: language === 'uk' ? 'Потрібна авторизація' : 'Требуется авторизация',
+        description: language === 'uk' ? 'Будь ласка, увійдіть для додавання компанії' : 'Пожалуйста, войдите для добавления компании',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const companyData = {
+        name: formData.name,
+        nameRu: formData.nameRu || formData.name,
+        description: formData.description,
+        descriptionRu: formData.descriptionRu || formData.description,
+        category: formData.category,
+        location: {
+          city: formData.city,
+          address: formData.address
+        },
+        contacts: {
+          phone: formData.phone,
+          email: formData.email,
+          website: formData.website || undefined
+        },
+        image: formData.image,
+        images: [],
+        isNew: true,
+        isActive: true
+      };
+
+      await companiesAPI.create(companyData);
+      
+      toast({
+        title: language === 'uk' ? 'Компанію додано' : 'Компания добавлена',
+        description: language === 'uk' ? 'Ваша компанія буде перевірена та опублікована найближчим часом' : 'Ваша компания будет проверена и опубликована в ближайшее время'
+      });
+      
+      setTimeout(() => navigate('/'), 2000);
+    } catch (error) {
+      toast({
+        title: language === 'uk' ? 'Помилка' : 'Ошибка',
+        description: error.response?.data?.detail || (language === 'uk' ? 'Не вдалося додати компанію' : 'Не удалось добавить компанию'),
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
