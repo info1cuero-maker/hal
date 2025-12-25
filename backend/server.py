@@ -429,7 +429,7 @@ async def get_blog_posts(
     total = await db.blog_posts.count_documents({})
     
     return {
-        "posts": posts,
+        "posts": [blog_post_helper(post) for post in posts],
         "total": total
     }
 
@@ -444,8 +444,7 @@ async def get_blog_post(post_id: str):
     if post is None:
         raise HTTPException(status_code=404, detail="Post not found")
     
-    post["_id"] = str(post["_id"])
-    return post
+    return blog_post_helper(post)
 
 
 # ============ CONTACT ENDPOINT ============
