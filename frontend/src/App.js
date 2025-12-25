@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider } from './context/AuthContext';
 import { Toaster } from './components/ui/toaster';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -16,24 +17,26 @@ import About from './pages/About';
 function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter>
-        <div className="App flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/company/:id" element={<CompanyDetail />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/add-business" element={<AddBusiness />} />
-              <Route path="/about" element={<About />} />
-            </Routes>
-          </main>
-          <Footer />
-          <Toaster />
-        </div>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <div className="App flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/company/:id" element={<CompanyDetail />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/contacts" element={<Contacts />} />
+                <Route path="/add-business" element={<AddBusiness />} />
+                <Route path="/about" element={<About />} />
+              </Routes>
+            </main>
+            <Footer />
+            <Toaster />
+          </div>
+        </BrowserRouter>
+      </AuthProvider>
     </LanguageProvider>
   );
 }
