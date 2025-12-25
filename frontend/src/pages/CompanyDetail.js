@@ -1,13 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { mockCompanies } from '../data/mockData';
+import { companiesAPI, reviewsAPI } from '../services/api';
 import { MapPin, Star, Phone, Mail, Globe, ArrowLeft, MessageCircle } from 'lucide-react';
 
 const CompanyDetail = () => {
   const { id } = useParams();
   const { language, t } = useLanguage();
-  const company = mockCompanies.find(c => c.id === parseInt(id));
+  const [company, setCompany] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadCompany();
+    loadReviews();
+  }, [id]);
+
+  const loadCompany = async () => {
+    try {
+      const response = await companiesAPI.getById(id);
+      setCompany(response.data);
+    } catch (error) {
+      console.error('Failed to load company:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadReviews = async () => {
+    try {
+      const response = await reviewsAPI.getByCompany(id);
+      setReviews(response.data.reviews);
+    } catch (error) {
+      console.error('Failed to load reviews:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-32 mb-6"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <div className="bg-gray-200 rounded-xl h-96 mb-6"></div>
+                <div className="bg-gray-200 rounded-xl h-64"></div>
+              </div>
+              <div className="lg:col-span-1">
+                <div className="bg-gray-200 rounded-xl h-96"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!company) {
     return (
