@@ -152,15 +152,21 @@ const Search = () => {
         {/* Results */}
         <div className="mb-6">
           <p className="text-gray-600">
-            {language === 'uk' ? 'Знайдено' : 'Найдено'}: <span className="font-semibold text-gray-900">{filteredCompanies.length}</span> {language === 'uk' ? 'компаній' : 'компаний'}
+            {language === 'uk' ? 'Знайдено' : 'Найдено'}: <span className="font-semibold text-gray-900">{total}</span> {language === 'uk' ? 'компаній' : 'компаний'}
           </p>
         </div>
 
         {/* Companies Grid */}
-        {filteredCompanies.length > 0 ? (
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredCompanies.map((company) => (
-              <CompanyCard key={company.id} company={company} />
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="bg-gray-200 rounded-lg h-64 animate-pulse"></div>
+            ))}
+          </div>
+        ) : companies.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {companies.map((company) => (
+              <CompanyCard key={company._id} company={company} />
             ))}
           </div>
         ) : (
