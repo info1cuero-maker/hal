@@ -18,8 +18,29 @@ const categoryIcons = {
 
 const Home = () => {
   const { language, t } = useLanguage();
-  const newCompanies = mockCompanies.filter(c => c.isNew).slice(0, 4);
-  const allCompanies = mockCompanies.slice(0, 8);
+  const [companies, setCompanies] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      // Load companies
+      const companiesResponse = await companiesAPI.getAll({ limit: 8, sort: 'recent' });
+      setCompanies(companiesResponse.data.companies);
+
+      // Load categories
+      const categoriesResponse = await categoriesAPI.getAll();
+      setCategories(categoriesResponse.data);
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
